@@ -1,0 +1,18 @@
+<h2>Participants</h2>
+<div class="container row">
+  <ul class="list-group col-sm-3">
+    <li *ngFor="let participant of participants" class="list-group-item">
+      {{ participant.realName }}
+      <span
+        *ngIf="participant.realName === realName"
+        class="badge badge-success"
+        >you</span
+      >
+    </li>
+  </ul>
+  <div class="col-sm-3">
+    <button class="btn btn-primary" [disabled]="participants.length < 4">
+      let's play!
+    </button>
+  </div>
+</div>

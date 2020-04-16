@@ -1,0 +1,29 @@
+.logo {
+  height: 100px;
+  object-fit: cover;
+}
+.subtitle {
+  height: 100px;
+  object-fit: none;
+  width: fit-content;
+}
+
+.bg-dark {
+  background-color: #5271ff !important;
+}
+
+.main {
+  margin-top: 80px; /* Add a top margin to avoid content overlay */
+}
+// .page {
+//   width: 100vw;
+//   height: 100vh;
+//   background-image: linear-gradient(
+//     to top,
+//     #aa5de6,
+//     #9a62ed,
+//     #8767f4,
+//     #706cfa,
+//     #5271ff
+//   );
+// }

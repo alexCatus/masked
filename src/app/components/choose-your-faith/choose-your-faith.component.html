@@ -1,0 +1,48 @@
+<form [formGroup]="form">
+  <section>
+    <article>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"
+            >Enter your own name</span
+          >
+        </div>
+        <input
+          formControlName="realName"
+          type="text"
+          class="form-control"
+          placeholder="Username"
+          aria-label="Username"
+          aria-describedby="basic-addon1"
+        />
+      </div>
+    </article>
+    <article class="">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"
+            >Enter a square id</span
+          >
+        </div>
+        <input
+          formControlName="squareId"
+          type="text"
+          class="form-control"
+          placeholder="SquareId"
+          aria-label="SquareId"
+          aria-describedby="basic-addon1"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="joinExistingSquare()"
+      >
+        Join existing square
+      </button>
+      <button type="button" class="btn btn-primary" (click)="createSquare()">
+        Create your own square
+      </button>
+    </article>
+  </section>
+</form>
