@@ -36,11 +36,17 @@
       <button
         type="button"
         class="btn btn-primary"
+        [disabled]="!this.form.get('partyId').value"
         (click)="joinExistingParty()"
       >
         Join existing party
       </button>
-      <button type="button" class="btn btn-primary" (click)="createParty()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="this.form.invalid"
+        (click)="createParty()"
+      >
         Create your own party
       </button>
     </article>

@@ -1,11 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import {
-  JoinPartyData,
-  Party,
-  WithId,
-  Message,
-  Participant,
-} from '../model/party.model';
+import { Party, WithId, Message, Participant } from '../model/party.model';
 import { WebStorageService, LOCAL_STORAGE } from 'angular-webstorage-service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
@@ -19,8 +13,8 @@ export class PartyService {
   party$: BehaviorSubject<Party & WithId> = new BehaviorSubject(undefined);
 
   createParty(userName: string): string {
-    const partyId = 'newPartyId' + 2333;
-    const userId = 'userId' + 2334;
+    const partyId = 'newPartyId' + _.random(0, 200);
+    const userId = 'userId' + _.random(0, 200);
     const party: Party & WithId = {
       id: partyId,
       isRunning: false,
