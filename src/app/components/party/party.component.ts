@@ -1,13 +1,15 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Party, WithId, Message, Participant } from 'src/app/model/party.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-
+import * as _ from 'lodash';
 @Component({
   selector: 'app-party',
   templateUrl: './party.component.html',
   styleUrls: ['./party.component.scss'],
 })
 export class PartyComponent implements OnInit {
+  falseParticipants;
+  trueParticipants;
   @Input()
   party: Party & WithId;
   @Input()
@@ -34,7 +36,13 @@ export class PartyComponent implements OnInit {
   stopPartyEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const participants = Object.values(this.party.participants).filter(
+      (x) => x.userId != this.userId
+    );
+    this.trueParticipants = _.shuffle(participants.map((x) => x.realName));
+    this.falseParticipants = _.shuffle(participants.map((x) => x.falseName));
+  }
 
   sendMessage() {
     const message: string = this.form.get('message').value as string;
