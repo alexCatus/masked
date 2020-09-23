@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SquareService } from './square.service';
+import { PartyService } from './party.service';
 
-describe('SquareService', () => {
+describe('PartyService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SquareService = TestBed.get(SquareService);
+    const service: PartyService = TestBed.get(PartyService);
     expect(service).toBeTruthy();
   });
 });

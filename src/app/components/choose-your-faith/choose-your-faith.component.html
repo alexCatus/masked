@@ -21,27 +21,27 @@
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1"
-            >Enter a square id</span
+            >Enter a party id</span
           >
         </div>
         <input
-          formControlName="squareId"
+          formControlName="partyId"
           type="text"
           class="form-control"
-          placeholder="SquareId"
-          aria-label="SquareId"
+          placeholder="PartyId"
+          aria-label="PartyId"
           aria-describedby="basic-addon1"
         />
       </div>
       <button
         type="button"
         class="btn btn-primary"
-        (click)="joinExistingSquare()"
+        (click)="joinExistingParty()"
       >
-        Join existing square
+        Join existing party
       </button>
-      <button type="button" class="btn btn-primary" (click)="createSquare()">
-        Create your own square
+      <button type="button" class="btn btn-primary" (click)="createParty()">
+        Create your own party
       </button>
     </article>
   </section>

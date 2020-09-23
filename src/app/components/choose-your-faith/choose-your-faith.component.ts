@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { JoinSquareData } from 'src/app/model/square.model';
+import { JoinPartyData } from 'src/app/model/party.model';
 
 @Component({
   selector: 'app-choose-your-faith',
@@ -8,28 +8,32 @@ import { JoinSquareData } from 'src/app/model/square.model';
   styleUrls: ['./choose-your-faith.component.scss'],
 })
 export class ChooseYourFaithComponent implements OnInit {
-  @Output('joinExistingSquare')
-  joinExistingSquareEmitter: EventEmitter<JoinSquareData> = new EventEmitter<
-    JoinSquareData
+  @Output('joinExistingParty')
+  joinExistingPartyEmitter: EventEmitter<JoinPartyData> = new EventEmitter<
+    JoinPartyData
   >();
-  @Output('createSquare')
-  createSquareEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Output('createParty')
+  createPartyEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   form: FormGroup = this.fb.group({
-    realName: ['', Validators.required],
-    squareId: [''],
+    //name is required, min leng 3 char
+    //TODO : should be uniq in the room
+    realName: [
+      '',
+      Validators.compose([Validators.required, Validators.minLength(3)]),
+    ],
+    partyId: [''],
   });
 
   constructor(private fb: FormBuilder) {}
   ngOnInit() {}
-  joinExistingSquare() {
-    console.log('ici');
-    this.joinExistingSquareEmitter.emit({
-      squareId: this.form.get('squareId').value,
+  joinExistingParty() {
+    this.joinExistingPartyEmitter.emit({
+      partyId: this.form.get('partyId').value,
       userName: this.form.get('realName').value,
     });
   }
-  createSquare() {
-    this.createSquareEmitter.emit(this.form.get('realName').value);
+  createParty() {
+    this.createPartyEmitter.emit(this.form.get('realName').value);
   }
 }

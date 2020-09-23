@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Participant, WithId } from '../../model/square.model';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { WithId, Party } from '../../model/party.model';
 
 @Component({
   selector: 'app-lobby',
@@ -8,16 +8,17 @@ import { Participant, WithId } from '../../model/square.model';
 })
 export class LobbyComponent implements OnInit {
   @Input()
-  participants: (Participant & WithId)[] = [];
-
+  party: Party & WithId;
   @Input()
-  realName: string;
+  userId: string;
+  @Output('startParty')
+  startPartyEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {
-    console.log(this.participants);
-  }
+  constructor() {}
 
   ngOnInit() {}
 
-  joinTheGame() {}
+  startParty() {
+    this.startPartyEmitter.emit(this.party.id);
+  }
 }

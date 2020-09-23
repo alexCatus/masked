@@ -1,0 +1,46 @@
+<h2>Party</h2>
+{{ party | json }}
+
+<ul class="list-group col-sm-3">
+  <li *ngFor="let message of party.messages" class="list-group-item">
+    {{ party.isRunning ? message.falseName : message.realName }}
+    {{ message.message }}
+    <span *ngIf="message.userId === userId" class="badge badge-success"
+      >you</span
+    >
+  </li>
+</ul>
+
+<div class="container row">
+  <form [formGroup]="form">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1"
+          >Enter your message</span
+        >
+      </div>
+      <input
+        formControlName="message"
+        type="text"
+        class="form-control"
+        placeholder="Message"
+        aria-label="Message"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+    <div class="col-sm-3">
+      <button
+        class="btn btn-primary"
+        [disabled]="this.form.invalid"
+        (click)="sendMessage()"
+      >
+        Send Message
+      </button>
+    </div>
+  </form>
+</div>
+<div class="container row">
+  <div class="col-sm-3">
+    <button class="btn btn-primary" (click)="stopParty()">Stop party</button>
+  </div>
+</div>

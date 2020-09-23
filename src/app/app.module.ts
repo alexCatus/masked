@@ -8,6 +8,8 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyPageComponent } from './pages/lobby-page.component';
 import { FaithPageComponent } from './pages/faith-page.component';
 import { StorageServiceModule } from 'angular-webstorage-service';
+import { PartyComponent } from './components/party/party.component';
+import { PartyPageComponent } from './pages/party-page.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { StorageServiceModule } from 'angular-webstorage-service';
     LobbyComponent,
     LobbyPageComponent,
     FaithPageComponent,
+    PartyComponent,
+    PartyPageComponent,
   ],
   imports: [
     BrowserModule,
