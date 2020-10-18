@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PartyService } from '../services/party.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Party, Message, WithId, Participant } from '../model/party.model';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { PartyFacade } from '../services/party.facade';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-party-page',
@@ -11,6 +10,8 @@ import { switchMap, tap } from 'rxjs/operators';
     <app-party
       [party]="party$ | async"
       [userId]="userId$ | async"
+      [user]="user$ | async"
+      [messages]="messages$ | async"
       (sendMessage)="onSendMessage($event)"
       (stopParty)="onStopParty($event)"
     ></app-party>
@@ -20,21 +21,20 @@ import { switchMap, tap } from 'rxjs/operators';
 export class PartyPageComponent implements OnInit {
   party$: Observable<Party & WithId>;
   userId$: Observable<string>;
-  constructor(
-    private service: PartyService,
-    private _router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.party$ = this.service.party$.pipe(
-      tap((x) => console.log('this.party', x))
-    );
-    this.userId$ = this.service.userId$;
+  user$: Observable<Participant>;
+  isLoaded$: Observable<boolean>;
+  messages$: Observable<Message[]>;
+  constructor(private facade: PartyFacade) {}
+  ngOnInit() {
+    this.party$ = this.facade.party$();
+    this.userId$ = this.facade.userId$;
+    this.user$ = this.facade.getUser$();
+    this.messages$ = this.facade.getMessages();
   }
-  ngOnInit() {}
   onSendMessage(data: { message: Message; partyId: string }) {
-    this.service.sendMessage(data.message, data.partyId);
+    this.facade.sendMessage(data.message, data.partyId);
   }
   onStopParty(partyId: string) {
-    this.service.stopParty(partyId);
+    this.facade.stopParty(partyId);
   }
 }

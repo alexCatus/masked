@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "masked-2a3d5": {
+      "hosting": {
+        "masked": [
+          "masked-2a3d5"
+        ]
+      }
+    }
+  }
+}

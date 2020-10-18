@@ -11,14 +11,16 @@ export class LobbyComponent implements OnInit {
   party: Party & WithId;
   @Input()
   userId: string;
+  @Input()
+  canStartParty: boolean;
   @Output('startParty')
-  startPartyEmitter: EventEmitter<string> = new EventEmitter<string>();
+  startPartyEmitter: EventEmitter<void> = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
 
   startParty() {
-    this.startPartyEmitter.emit(this.party.id);
+    this.startPartyEmitter.emit();
   }
 }

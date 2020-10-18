@@ -3,26 +3,33 @@ import { Routes, RouterModule } from '@angular/router';
 import { LobbyPageComponent } from './pages/lobby-page.component';
 import { FaithPageComponent } from './pages/faith-page.component';
 import { PartyPageComponent } from './pages/party-page.component';
-import { ExistingPartyGuard } from './existing-party.guard';
+import { ExistingPartyGuard } from './guards/existing-party.guard';
+import { PartyNotInProgressGuard } from './guards/party-not-in-progress.guard';
+import { PartyInProgressGuard } from './guards/party-in-progress.guard';
+import { UserIsParticipantGuard } from './guards/user-is-participant.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: FaithPageComponent,
   },
+
   {
-    //If no party go to FaithPage
-    //If party is running go to party
-    canActivate: [ExistingPartyGuard],
-    path: 'lobby/:partyId',
-    component: LobbyPageComponent,
-  },
-  {
-    //If no party go to FaithPage
-    canActivate: [ExistingPartyGuard],
-    //add guard to check if party has begun, otherwise, go to lobby
     path: 'party/:partyId',
-    component: PartyPageComponent,
+    canActivate: [ExistingPartyGuard, UserIsParticipantGuard],
+    children: [
+      {
+        canActivate: [PartyNotInProgressGuard],
+
+        path: 'lobby',
+        component: LobbyPageComponent,
+      },
+      {
+        canActivate: [PartyInProgressGuard],
+        path: 'chat',
+        component: PartyPageComponent,
+      },
+    ],
   },
 ];
 

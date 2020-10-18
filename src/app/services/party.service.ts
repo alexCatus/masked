@@ -1,94 +1,112 @@
 import { Injectable, Inject } from '@angular/core';
-import { Party, WithId, Message, Participant } from '../model/party.model';
+import {
+  Party,
+  WithId,
+  Message,
+  Participant,
+  PartyGenerator,
+} from '../model/party.model';
 import { WebStorageService, LOCAL_STORAGE } from 'angular-webstorage-service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
 import * as _ from 'lodash';
+import { switchMap } from 'rxjs/operators';
+import { mockParticipants } from '../utils/hard-coded-data';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PartyService {
-  constructor(@Inject(LOCAL_STORAGE) private storage: WebStorageService) {}
-  userId$: BehaviorSubject<string> = new BehaviorSubject('');
-  party$: BehaviorSubject<Party & WithId> = new BehaviorSubject(undefined);
+  constructor(
+    @Inject(LOCAL_STORAGE) private storage: WebStorageService,
+    private firestore: AngularFirestore,
+    private db: AngularFireDatabase
+  ) {}
 
-  createParty(userName: string): string {
-    const partyId = 'newPartyId' + _.random(0, 200);
-    const userId = 'userId' + _.random(0, 200);
-    const party: Party & WithId = {
-      id: partyId,
-      isRunning: false,
-      messages: [],
-      participants: {
-        [userId]: {
-          userId: userId,
-          realName: userName,
-          falseName: null,
-        },
-        '0002': {
-          userId: '0002',
-          realName: 'Natasha',
-          falseName: null,
-        },
-        '0003': {
-          userId: '0003',
-          realName: 'Joanie',
-          falseName: null,
-        },
-        '0004': {
-          userId: '0004',
-          realName: 'Sarah',
-          falseName: null,
-        },
-      },
-    };
-    this.storage.set('userId', userId);
-    this.storage.set(partyId, party);
+  partyRef$: BehaviorSubject<
+    AngularFirestoreDocument<Party & WithId>
+  > = new BehaviorSubject<AngularFirestoreDocument<Party & WithId>>(undefined);
+  userId$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  partyId$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  createParty(): string {
+    const partyId = this.firestore.createId();
+    const party = PartyGenerator(partyId);
+    this.partyId$.next(partyId);
+
+    this.partyRef$.next(
+      this.firestore.collection('party').doc<Party & WithId>(partyId)
+    );
+    this.partyRef$.value.set(party);
     return partyId;
   }
-  joinExistingParty(partyId: string): boolean {
-    const party = this.storage.get(partyId);
-    const userId = this.storage.get('userId');
-    console.log('partyId', partyId);
-    console.log('party', party);
-    console.log('userId', userId);
-    if (!!partyId && !!party && !!userId) {
-      this.userId$.next(userId);
-      this.party$.next(party);
-      return true;
-    }
-    return false;
+  getParty() {
+    return this.partyRef$.pipe(
+      switchMap((partyDoc) => partyDoc.valueChanges())
+    );
   }
 
-  getParty(partyId: string): Observable<Party & WithId> {
-    return this.storage.get(partyId);
+  loadParty(partyId: string) {
+    this.partyId$.next(partyId);
+    this.partyRef$.next(
+      this.firestore.collection('party').doc<Party & WithId>(partyId)
+    );
   }
+
+  joinParty(userName: string) {
+    const userId = this.firestore.createId();
+    const currentUser: Participant = {
+      userId: userId,
+      realName: userName,
+      falseName: null,
+    };
+    this.partyRef$.value.update({
+      ['participants.' + userId]: currentUser,
+    });
+    this.userId$.next(userId);
+  }
+
   sendMessage(message: Message, partyId: string) {
-    console.log('IN SEND MESSAGE SERVICE');
-    const party = this.storage.get(partyId) as Party & WithId;
-    party.messages.push(message);
-    this.storage.set(partyId, party);
-    this.party$.next(party);
+    this.db.list(partyId).push(message);
   }
-  beginParty(partyId: string) {
-    const party = this.storage.get(partyId) as Party & WithId;
-    if (!party.isRunning) {
-      assignateName(party.participants);
-      party.isRunning = true;
-      this.storage.set(partyId, party);
-      this.party$.next(party);
-    }
+  getMessages(): Observable<Message[]> {
+    return this.partyId$.pipe(
+      switchMap((partyId) => this.db.list<Message>(partyId).valueChanges())
+    );
   }
-  stopParty(partyId: string) {
-    const party = this.storage.get(partyId) as Party & WithId;
-    if (party.isRunning) {
-      party.isRunning = false;
-      this.storage.set(partyId, party);
-      this.party$.next(party);
-    }
+  beginParty() {
+    this.firestore.firestore.runTransaction((transaction) =>
+      transaction.get(this.partyRef$.value.ref).then((party) => {
+        const startedParty = startParty(party.data() as Party & WithId);
+        transaction.update(this.partyRef$.value.ref, startedParty);
+      })
+    );
+  }
+
+  stopParty() {
+    this.partyRef$.value.update({
+      isRunning: false,
+    });
   }
 }
+function startParty(party: Party & WithId) {
+  const participants = assignateName({
+    ...mockParticipants(),
+    ...party.participants,
+  });
+  return {
+    ...party,
+    participants: participants,
+    isRunning: true,
+  };
+}
 function assignateName(participants: { [key: string]: Participant }) {
+  const participantsCloned = _.clone(participants);
   let realNames: Participant[] = _.values(participants);
   let falseNames: string[] = _.clone(realNames).map(
     (participant) => participant.userId
@@ -96,16 +114,11 @@ function assignateName(participants: { [key: string]: Participant }) {
   while (
     !realNames.every((value, index) => falseNames[index] != value.userId)
   ) {
-    console.count();
-    console.table(realNames);
-    console.table(falseNames);
     falseNames = _.shuffle(falseNames);
   }
   falseNames.forEach((value, index) => {
-    console.log('ici');
     const key = realNames[index].userId;
-    console.log('key', key);
-    participants[key].falseName = participants[value].realName;
-    console.log('participant', participants[key]);
+    participantsCloned[key].falseName = participants[value].realName;
   });
+  return participantsCloned;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PartyService } from '../services/party.service';
-import { Router } from '@angular/router';
 import { JoinPartyData } from '../model/party.model';
+import { PartyFacade } from '../services/party.facade';
+import { RouterService } from '../services/router.service';
 
 @Component({
   selector: 'app-faith-page',
@@ -14,13 +14,17 @@ import { JoinPartyData } from '../model/party.model';
   styles: [],
 })
 export class FaithPageComponent implements OnInit {
-  constructor(private service: PartyService, private router: Router) {}
+  constructor(
+    private facade: PartyFacade,
+    private routerService: RouterService
+  ) {}
   ngOnInit() {}
   onJoinExistingParty(data: JoinPartyData) {
-    this.router.navigate(['/lobby', data.partyId]);
+    this.facade.joinExistingParty(data);
+    this.routerService.navigateToLobby(data.partyId);
   }
   onCreateParty(realName: string) {
-    const partyId = this.service.createParty(realName);
-    this.router.navigate(['/lobby', partyId]);
+    const partyId = this.facade.createParty(realName);
+    this.routerService.navigateToLobby(partyId);
   }
 }

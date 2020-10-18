@@ -23,3 +23,25 @@ export interface JoinPartyData {
   partyId: string;
   userName: string;
 }
+
+export function PartyGenerator(partyId: string): Party & WithId {
+  return {
+    id: partyId,
+    isRunning: false,
+    messages: [],
+    participants: {},
+  };
+}
+
+export function AddUserToParty(
+  party: Party & WithId,
+  participant: Participant
+) {
+  return {
+    ...party,
+    participants: {
+      ...participant,
+      [participant.userId]: participant,
+    },
+  };
+}

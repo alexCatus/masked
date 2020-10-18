@@ -10,14 +10,29 @@ import * as _ from 'lodash';
 export class PartyComponent implements OnInit {
   falseParticipants;
   trueParticipants;
+  private _party: Party & WithId;
   @Input()
-  party: Party & WithId;
+  set party(party: Party & WithId) {
+    if (!!party) {
+      this._party = party;
+      const participants = Object.values(this.party.participants).filter(
+        (x) => x.userId != this.userId
+      );
+      this.trueParticipants = _.shuffle(participants.map((x) => x.realName));
+      this.falseParticipants = _.shuffle(participants.map((x) => x.falseName));
+    }
+  }
+  get party(): Party & WithId {
+    return this._party;
+  }
   @Input()
   userId: string;
+  @Input()
+  user: Participant;
+  @Input()
+  messages: Message[];
 
   form: FormGroup = this.fb.group({
-    //name is required, min leng 3 char
-    //TODO : should be uniq in the room
     message: [
       '',
       Validators.compose([Validators.required, Validators.minLength(3)]),
@@ -36,13 +51,7 @@ export class PartyComponent implements OnInit {
   stopPartyEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit() {
-    const participants = Object.values(this.party.participants).filter(
-      (x) => x.userId != this.userId
-    );
-    this.trueParticipants = _.shuffle(participants.map((x) => x.realName));
-    this.falseParticipants = _.shuffle(participants.map((x) => x.falseName));
-  }
+  ngOnInit() {}
 
   sendMessage() {
     const message: string = this.form.get('message').value as string;

@@ -1,5 +1,10 @@
 <h2>Participants</h2>
-{{ party | json }}
+PARTY ID: {{ party?.id }}
+
+<button [cdkCopyToClipboard]="'longText'" [cdkCopyToClipboardAttempts]="5">
+  Copy text
+</button>
+
 <div class="container row">
   <ul class="list-group col-sm-3">
     <li
@@ -13,6 +18,17 @@
     </li>
   </ul>
   <div class="col-sm-3">
-    <button class="btn btn-primary" (click)="startParty()">let's play!</button>
+    <button
+      class="btn btn-primary"
+      [disabled]="!canStartParty"
+      (click)="startParty()"
+    >
+      let's play!
+    </button>
+  </div>
+  <div class="col-sm-3">
+    <button class="btn btn-primary" (click)="startParty()">
+      MOCK let's play!
+    </button>
   </div>
 </div>

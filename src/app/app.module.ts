@@ -10,7 +10,12 @@ import { FaithPageComponent } from './pages/faith-page.component';
 import { StorageServiceModule } from 'angular-webstorage-service';
 import { PartyComponent } from './components/party/party.component';
 import { PartyPageComponent } from './pages/party-page.component';
-
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,11 +28,15 @@ import { PartyPageComponent } from './pages/party-page.component';
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase, 'masked'),
+    AngularFireAnalyticsModule,
+    AngularFireDatabaseModule,
     AppRoutingModule,
     ReactiveFormsModule,
     StorageServiceModule,
+    ClipboardModule,
   ],
-  providers: [],
+  providers: [AngularFirestore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
