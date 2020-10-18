@@ -1,10 +1,12 @@
 <h2>Participants</h2>
-PARTY ID: {{ party?.id }}
-
-<button [cdkCopyToClipboard]="'longText'" [cdkCopyToClipboardAttempts]="5">
-  Copy text
+<button
+  *ngIf="party?.id as partyId"
+  class="btn btn-primary"
+  [cdkCopyToClipboard]="partyId"
+  [cdkCopyToClipboardAttempts]="5"
+>
+  Copy Id
 </button>
-
 <div class="container row">
   <ul class="list-group col-sm-3">
     <li

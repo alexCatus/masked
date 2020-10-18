@@ -7,7 +7,6 @@ import { ChooseYourFaithComponent } from './components/choose-your-faith/choose-
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyPageComponent } from './pages/lobby-page.component';
 import { FaithPageComponent } from './pages/faith-page.component';
-import { StorageServiceModule } from 'angular-webstorage-service';
 import { PartyComponent } from './components/party/party.component';
 import { PartyPageComponent } from './pages/party-page.component';
 import { environment } from 'src/environments/environment';
@@ -33,7 +32,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     AngularFireDatabaseModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    StorageServiceModule,
     ClipboardModule,
   ],
   providers: [AngularFirestore],

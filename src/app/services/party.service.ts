@@ -6,7 +6,6 @@ import {
   Participant,
   PartyGenerator,
 } from '../model/party.model';
-import { WebStorageService, LOCAL_STORAGE } from 'angular-webstorage-service';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
@@ -22,7 +21,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
 })
 export class PartyService {
   constructor(
-    @Inject(LOCAL_STORAGE) private storage: WebStorageService,
     private firestore: AngularFirestore,
     private db: AngularFireDatabase
   ) {}
@@ -96,7 +94,6 @@ export class PartyService {
 }
 function startParty(party: Party & WithId) {
   const participants = assignateName({
-    ...mockParticipants(),
     ...party.participants,
   });
   return {
