@@ -4,15 +4,15 @@
 export const environment = {
   production: false,
   serverUrl: 'http://localhost:3000/',
-  firebase: {
+  firebaseConfig: {
     apiKey: 'AIzaSyAyeBLXyCkwEQqUyh7c7YtgDc_gz4vzR4c',
     authDomain: 'masked-2a3d5.firebaseapp.com',
     databaseURL: 'https://masked-2a3d5.firebaseio.com',
     projectId: 'masked-2a3d5',
     storageBucket: 'masked-2a3d5.appspot.com',
     messagingSenderId: '464114832785',
-    appId: '1:464114832785:web:e37263275cf225455bf630',
-    measurementId: 'G-ZGT9RC1NMD',
+    appId: '1:464114832785:web:cbe04ae919cfa8ef5bf630',
+    measurementId: 'G-5Q0PL1HP5X',
   },
 };
 /*
