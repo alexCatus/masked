@@ -14,6 +14,7 @@ import { IdService } from './id.service';
 import { PartyService } from './archives/party.service';
 import { MessageService } from './message.service';
 import { startParty } from './party.utils';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const mockedParty = {
   id: 'party_1',
@@ -47,26 +48,27 @@ const mockedParty = {
 })
 export class PartyFacade {
   userId$: BehaviorSubject<string> = new BehaviorSubject<string>('0001');
+  party$: Observable<Party>;
 
-  party$: BehaviorSubject<Party | undefined> = new BehaviorSubject<Party>(
-    mockedParty
-  );
-
-  constructor(private idService: IdService) {}
+  constructor(
+    private firestore: AngularFirestore,
+    private idService: IdService
+  ) {}
 
   createParty(userName: string) {
     const participantId = '0005';
-    this.party$.next({
-      ...this.party$.value,
+    const newParty = {
+      ...mockedParty,
       participants: {
-        ...this.party$.value.participants,
+        ...mockedParty.participants,
         [participantId]: {
           id: '0005',
           realName: userName,
           falseName: null,
         },
       },
-    });
+    };
+    this.firestore.collection<Party>('parties').add(newParty);
     this.userId$.next(participantId);
   }
   joinExistingParty(data: JoinPartyData) {
@@ -78,7 +80,7 @@ export class PartyFacade {
 
   sendMessage(message: Message) {}
   beginParty() {
-    this.party$.next(startParty(this.party$.value));
+    // this.party$.next(startParty(this.party$.value));
     // this.partyService.startParty();
   }
 

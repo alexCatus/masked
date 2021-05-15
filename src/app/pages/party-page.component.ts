@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Party, Message, WithId, Participant } from '../model/party.model';
+import { Party, Message, Participant } from '../model/party.model';
 import { combineLatest, Observable } from 'rxjs';
 import { PartyFacade } from '../services/party.facade';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { PartyComponentInfo } from '../components/party/party.component';
 import * as _ from 'lodash';
 
