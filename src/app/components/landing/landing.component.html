@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="formCreate" (ngSubmit)="createParty()">
   <section>
     <article>
       <div class="input-group mb-3">
@@ -8,7 +8,34 @@
           >
         </div>
         <input
-          formControlName="realName"
+          formControlName="userName"
+          type="text"
+          class="form-control"
+          placeholder="Username"
+          aria-label="Username"
+          aria-describedby="basic-addon1"
+        />
+      </div>
+    </article>
+    <article class="">
+      <button type="submit" class="btn btn-primary">
+        Create your own party
+      </button>
+    </article>
+  </section>
+</form>
+
+<form [formGroup]="formJoin" (ngSubmit)="joinExistingParty()">
+  <section>
+    <article>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"
+            >Enter your own name</span
+          >
+        </div>
+        <input
+          formControlName="userName"
           type="text"
           class="form-control"
           placeholder="Username"
@@ -33,22 +60,7 @@
           aria-describedby="basic-addon1"
         />
       </div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="this.form.invalid && !this.form.get('partyId').value"
-        (click)="joinExistingParty()"
-      >
-        Join existing party
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="this.form.invalid"
-        (click)="createParty()"
-      >
-        Create your own party
-      </button>
+      <button type="submit" class="btn btn-primary">Join existing party</button>
     </article>
   </section>
 </form>

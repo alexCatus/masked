@@ -6,84 +6,86 @@ import {
   Participant,
   JoinPartyData,
 } from '../model/party.model';
-import { combineLatest, Observable } from 'rxjs';
-import { PartyService } from './party.service';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import * as _ from 'lodash';
+import { IdService } from './id.service';
+import { PartyService } from './archives/party.service';
+import { MessageService } from './message.service';
+import { startParty } from './party.utils';
+
+const mockedParty = {
+  id: 'party_1',
+  isRunning: false,
+  messages: [],
+  participants: {
+    '0001': {
+      id: '0001',
+      realName: 'Alex',
+      falseName: null,
+    },
+    '0002': {
+      id: '0002',
+      realName: 'Roberto',
+      falseName: null,
+    },
+    '0003': {
+      id: '0003',
+      realName: 'Sandrine',
+      falseName: null,
+    },
+    '0004': {
+      id: '0004',
+      realName: 'Maferine',
+      falseName: null,
+    },
+  },
+};
 @Injectable({
   providedIn: 'root',
 })
 export class PartyFacade {
-  userId$: Observable<string> = this.service.userId$;
-  party$(): Observable<Party & WithId> {
-    return this.service.getParty();
-  }
+  userId$: BehaviorSubject<string> = new BehaviorSubject<string>('0001');
 
-  partyExists() {
-    return this.service.partyRef$.pipe(map((x) => !!x));
-  }
+  party$: BehaviorSubject<Party | undefined> = new BehaviorSubject<Party>(
+    mockedParty
+  );
 
-  getUser$(): Observable<Participant> {
-    return combineLatest([this.party$(), this.userId$]).pipe(
-      map(([party, userId]) => {
-        return { ...party.participants[userId], id: userId };
-      })
-    );
-  }
-
-  isCurrentUserParticipant$(): Observable<boolean> {
-    return this.getUser$().pipe(
-      map((user) => {
-        console.log(user);
-        return !!user.userId;
-      })
-    );
-  }
-
-  isInProgress$(): Observable<boolean> {
-    return this.party$().pipe(map((party) => party.isRunning));
-  }
-
-  canStartParty$(): Observable<boolean> {
-    return this.party$().pipe(
-      map((party) => Object.keys(party.participants).length > 3)
-    );
-  }
-
-  isLoaded$(): Observable<boolean> {
-    return combineLatest([this.party$(), this.getUser$()]).pipe(
-      map(([party, user]) => !!party && !!user)
-    );
-  }
-  constructor(private service: PartyService) {}
+  constructor(private idService: IdService) {}
 
   createParty(userName: string) {
-    const id = this.service.createParty();
-    this.service.joinParty(userName);
-    return id;
+    const participantId = '0005';
+    this.party$.next({
+      ...this.party$.value,
+      participants: {
+        ...this.party$.value.participants,
+        [participantId]: {
+          id: '0005',
+          realName: userName,
+          falseName: null,
+        },
+      },
+    });
+    this.userId$.next(participantId);
   }
-
   joinExistingParty(data: JoinPartyData) {
-    this.service.loadParty(data.partyId);
-    this.service.joinParty(data.userName);
+    const participant = {
+      realName: data.userName,
+      falseName: null,
+    };
   }
 
-  loadParty(partyId: string) {
-    this.service.loadParty(partyId);
-  }
-
-  sendMessage(message: Message, partyId: string) {
-    this.service.sendMessage(message, partyId);
-  }
+  sendMessage(message: Message) {}
   beginParty() {
-    this.service.beginParty();
+    this.party$.next(startParty(this.party$.value));
+    // this.partyService.startParty();
   }
 
-  stopParty(partyId: string) {
-    this.service.stopParty();
+  stopParty() {
+    // this.partyService.stopParty();
   }
-  getMessages(): Observable<Message[]> {
-    return this.service.getMessages();
+  loadMessages() {
+    // this.messagesService.load();
   }
 }

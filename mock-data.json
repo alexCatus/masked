@@ -1,0 +1,28 @@
+{
+  "parties": [
+    {
+      "isRunning": false,
+      "messages": [],
+      "id": 1
+    },
+    {
+      "isRunning": false,
+      "messages": [],
+      "id": 2
+    }
+  ],
+  "participants": [
+    {
+      "realName": "hello",
+      "falseName": null,
+      "partyId": 1,
+      "id": 1
+    },
+    {
+      "realName": "Youhou",
+      "falseName": null,
+      "partyId": 2,
+      "id": 2
+    }
+  ]
+}

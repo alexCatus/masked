@@ -1,4 +1,5 @@
 export interface Party {
+  id?: string;
   isRunning: boolean;
   participants: { [id: string]: Participant };
   messages: Message[];
@@ -10,7 +11,7 @@ export interface Message extends Participant {
 }
 
 export interface Participant {
-  userId: string;
+  id?: string;
   realName: string;
   falseName: string | null;
 }
@@ -24,24 +25,27 @@ export interface JoinPartyData {
   userName: string;
 }
 
-export function PartyGenerator(partyId: string): Party & WithId {
+export function PartyGenerator(
+  partyId: string,
+  participant: Participant & WithId
+): Party & WithId {
   return {
     id: partyId,
     isRunning: false,
     messages: [],
-    participants: {},
+    participants: { [participant.id]: participant },
   };
 }
 
 export function AddUserToParty(
   party: Party & WithId,
-  participant: Participant
+  participant: Participant & WithId
 ) {
   return {
     ...party,
     participants: {
       ...participant,
-      [participant.userId]: participant,
+      [participant.id]: participant,
     },
   };
 }
