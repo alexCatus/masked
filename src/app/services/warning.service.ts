@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class WarningService {
   constructor() {}
-  display(warning: string) {
-    console.log({ warning: warning });
+  display(message: string, error: string) {
+    // console.warn(message, error);
   }
 }

@@ -6,7 +6,7 @@ import {
   UrlTree,
   Router,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PartyFacade } from '../services/party.facade';
 import { RouterService } from '../services/router.service';
@@ -25,14 +25,15 @@ export class ExistingPartyGuard implements CanActivate {
     _next: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
-    return this.partyFacade.partyExists().pipe(
-      map((party) => {
-        if (!!party) {
-          return true;
-        }
-        this.warningService.display('partyDontExist');
-        return this.routerService.goToHome('');
-      })
-    );
+    return of(true);
+    // return this.partyFacade.partyExists().pipe(
+    //   map((party) => {
+    //     if (!!party) {
+    //       return true;
+    //     }
+    //     this.warningService.display('partyDontExist');
+    //     return this.routerService.goToHome('');
+    //   })
+    // );
   }
 }

@@ -8,7 +8,7 @@ import { WithId, Party } from '../../model/party.model';
 })
 export class LobbyComponent implements OnInit {
   @Input()
-  party: Party & WithId;
+  party: Party;
   @Input()
   userId: string;
   @Input()
@@ -18,7 +18,9 @@ export class LobbyComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.party);
+  }
 
   startParty() {
     this.startPartyEmitter.emit();

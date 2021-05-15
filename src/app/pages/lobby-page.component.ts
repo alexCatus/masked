@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Party, WithId } from '../model/party.model';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { PartyFacade } from '../services/party.facade';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { RouterService } from '../services/router.service';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-lobby-page',
   template: `
@@ -18,27 +19,18 @@ import { RouterService } from '../services/router.service';
 })
 export class LobbyPageComponent implements OnInit {
   userId$: Observable<string>;
-  party$: Observable<Party & WithId>;
-  canStartParty$: Observable<boolean>;
-  hasStarted$: Observable<boolean>;
-  constructor(
-    private facade: PartyFacade,
-    private routerService: RouterService
-  ) {}
+  party$: Observable<Party>;
+  canStartParty$: Observable<boolean> = of(true);
+  hasStarted$: Observable<boolean> = of(false);
+  constructor(private facade: PartyFacade, private router: Router) {}
 
   ngOnInit() {
+    this.party$ = this.facade.party$;
     this.userId$ = this.facade.userId$;
-    this.party$ = this.facade.party$().pipe(
-      tap((x) => {
-        if (x.isRunning) {
-          this.routerService.navigateToChat(x.id);
-        }
-      })
-    );
-    this.canStartParty$ = this.facade.canStartParty$();
   }
 
   onStartParty() {
     this.facade.beginParty();
+    this.router.navigate(['/party']);
   }
 }

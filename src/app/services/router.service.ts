@@ -19,8 +19,8 @@ export class RouterService {
   navigateToHome(partyId: string) {
     this.router.navigate(['/']);
   }
-  navigateToLobby(partyId: string) {
-    this.router.navigate(['/', 'party', partyId, 'lobby']);
+  navigateToLobby(partyId: string, userId: string) {
+    this.router.navigate(['/', 'party', partyId, 'user', userId, 'lobby']);
   }
   navigateToChat(partyId: string) {
     this.router.navigate(['/', 'party', partyId, 'chat']);
