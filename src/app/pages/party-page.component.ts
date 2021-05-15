@@ -4,6 +4,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { PartyFacade } from '../services/party.facade';
 import { filter, map, tap } from 'rxjs/operators';
 import { PartyComponentInfo } from '../components/party/party.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-party-page',

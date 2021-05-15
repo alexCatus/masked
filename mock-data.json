@@ -1,16 +1,6 @@
 {
-  "parties": [
-    {
-      "isRunning": false,
-      "messages": [],
-      "id": 1
-    },
-    {
-      "isRunning": false,
-      "messages": [],
-      "id": 2
-    }
-  ],
+  "parties": [],
+  
   "participants": [
     {
       "realName": "hello",
