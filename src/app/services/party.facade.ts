@@ -50,6 +50,7 @@ export class PartyFacade {
   userId$: BehaviorSubject<string> = new BehaviorSubject<string>('0001');
   party$: Observable<Party>;
 
+partyId: string;
   constructor(
     private firestore: AngularFirestore,
     private idService: IdService
@@ -68,7 +69,8 @@ export class PartyFacade {
         },
       },
     };
-    this.firestore.collection<Party>('parties').add(newParty);
+    this.partyId = this.firestore.createId();
+    this.firestore.collection<Party>('parties').doc(this.partyId).set(newParty);
     this.userId$.next(participantId);
   }
   joinExistingParty(data: JoinPartyData) {
@@ -77,7 +79,9 @@ export class PartyFacade {
       falseName: null,
     };
   }
-
+  getParty():Observable<Party> {
+    return this.firestore.doc<Party>('parties/'+this.partyId).valueChanges();
+  }
   sendMessage(message: Message) {}
   beginParty() {
     // this.party$.next(startParty(this.party$.value));

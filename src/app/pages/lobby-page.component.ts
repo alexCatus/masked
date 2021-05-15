@@ -25,7 +25,7 @@ export class LobbyPageComponent implements OnInit {
   constructor(private facade: PartyFacade, private router: Router) {}
 
   ngOnInit() {
-    this.party$ = this.facade.party$;
+    this.party$ = this.facade.getParty();
     this.userId$ = this.facade.userId$;
   }
 

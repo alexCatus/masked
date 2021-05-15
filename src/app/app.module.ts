@@ -28,7 +28,7 @@ import { LandingComponent } from './components/landing/landing.component';
   ],
   imports: [
     BrowserModule,
-    AngularFireModule.initializeApp(environment.firebase, 'masked'),
+    AngularFireModule.initializeApp(environment.firebaseConfig, 'masked'),
     AngularFireAnalyticsModule,
     AngularFireDatabaseModule,
     AppRoutingModule,
