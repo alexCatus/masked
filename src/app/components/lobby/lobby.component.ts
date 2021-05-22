@@ -19,7 +19,6 @@ export class LobbyComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log(this.party);
   }
 
   startParty() {
