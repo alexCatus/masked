@@ -50,11 +50,8 @@ export class PartyFacade {
   userId$: BehaviorSubject<string> = new BehaviorSubject<string>('0001');
   party$: Observable<Party>;
 
-partyId: string;
-  constructor(
-    private db: AngularFirestore,
-    private idService: IdService
-  ) {}
+  partyId: string;
+  constructor(private db: AngularFirestore, private idService: IdService) {}
 
   createParty(userName: string) {
     const participantId = this.db.createId();
@@ -82,44 +79,42 @@ partyId: string;
     };
     this.userId$.next(participant.id);
     this.partyId = data.partyId;
-    
-    this.db.doc<Party>('parties/'+this.partyId).update({
-      ['participants.'+participant.id]: participant
+
+    this.db.doc<Party>('parties/' + this.partyId).update({
+      ['participants.' + participant.id]: participant,
     });
-    
   }
-  getParty():Observable<Party> {
-    return this.db.doc<Party>('parties/'+this.partyId).valueChanges();
+  getParty(): Observable<Party> {
+    return this.db.doc<Party>('parties/' + this.partyId).valueChanges();
   }
   sendMessage(message: Message) {
-    var partyRef = this.db.doc<Party>('parties/'+this.partyId);
-// Atomically add a new region to the "regions" array field.
+    var partyRef = this.db.doc<Party>('parties/' + this.partyId);
+    // Atomically add a new region to the "regions" array field.
     partyRef.update({
-    messages: firebase.firestore.FieldValue.arrayUnion(message)
-});
-
+      messages: firebase.firestore.FieldValue.arrayUnion(message),
+    });
   }
   beginParty() {
-    
     // Create a reference to the party doc.
     var partyRef = this.db.collection('parties').doc(this.partyId).ref;
 
-    this.db.firestore.runTransaction((transaction) => {
+    this.db.firestore
+      .runTransaction((transaction) => {
         // This code may get re-run multiple times if there are conflicts.
         return transaction.get(partyRef).then((partyDoc) => {
-            if (!partyDoc.exists) {
-                throw "Document does not exist!";
-            }
-            var party = startParty(partyDoc.data());
-            transaction.update(partyRef, party);
-           
+          if (!partyDoc.exists) {
+            throw 'Document does not exist!';
+          }
+          var party = startParty(partyDoc.data() as Party);
+          transaction.update(partyRef, party);
         });
-    }).then(() => {
-        console.log("Transaction successfully committed!");
-    }).catch((error) => {
-        console.log("Transaction failed: ", error);
-    });
-
+      })
+      .then(() => {
+        console.log('Transaction successfully committed!');
+      })
+      .catch((error) => {
+        console.log('Transaction failed: ', error);
+      });
   }
 
   stopParty() {
