@@ -91,7 +91,14 @@ partyId: string;
   getParty():Observable<Party> {
     return this.db.doc<Party>('parties/'+this.partyId).valueChanges();
   }
-  sendMessage(message: Message) {}
+  sendMessage(message: Message) {
+    var partyRef = this.db.doc<Party>('parties/'+this.partyId);
+// Atomically add a new region to the "regions" array field.
+    partyRef.update({
+    messages: firebase.firestore.FieldValue.arrayUnion(message)
+});
+
+  }
   beginParty() {
     
     // Create a reference to the party doc.

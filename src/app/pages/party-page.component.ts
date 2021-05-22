@@ -33,7 +33,6 @@ export class PartyPageComponent implements OnInit {
     ]).pipe(
       filter(([x, y]) => !!x && !!y),
       map(([party, userId]) => {
-        console.log('In page' , party, userId);
         const participants = Object.values(party.participants).filter(
           (x) => x.id != userId
         );
@@ -53,7 +52,7 @@ export class PartyPageComponent implements OnInit {
     );
   }
   onSendMessage(data: { message: Message; partyId: string }) {
-    // this.facade.sendMessage(data.message, data.partyId);
+    this.facade.sendMessage(data.message);
   }
   onStopParty(partyId: string) {
     // this.facade.stopParty(partyId);

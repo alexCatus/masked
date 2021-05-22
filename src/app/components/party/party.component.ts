@@ -22,6 +22,7 @@ export class PartyComponent implements OnInit {
       this.falseParticipants = value.falseParticipants;
       this.user = value.user;
       this.party = value.party;
+      this.messages = value.party.messages;
     }
     
   }
@@ -60,18 +61,18 @@ export class PartyComponent implements OnInit {
   ngOnInit() {}
 
   sendMessage() {
-    // const message: string = this.form.get('message').value as string;
-    // this.sendMessageEmitter.emit({
-    //   message: {
-    //     userId: this.userId,
-    //     falseName: this.party.participants[this.userId].falseName,
-    //     realName: this.party.participants[this.userId].realName,
-    //     message: message,
-    //     sentOn: new Date(Date.now()),
-    //   },
-    //   partyId: this.party.id,
-    // });
-    // this.form.reset();
+    const message: string = this.form.get('message').value as string;
+    this.sendMessageEmitter.emit({
+      message: {
+        id: this.user.id,
+        falseName: this.party.participants[this.user.id].falseName,
+        realName: this.party.participants[this.user.id].realName,
+        message: message,
+        sentOn: new Date(Date.now()),
+      },
+      partyId: this.party.id,
+    });
+    this.form.reset();
   }
   stopParty() {
     this.stopPartyEmitter.emit(this.party.id);
