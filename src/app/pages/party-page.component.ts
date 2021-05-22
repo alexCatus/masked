@@ -28,11 +28,12 @@ export class PartyPageComponent implements OnInit {
   constructor(private facade: PartyFacade) {}
   ngOnInit() {
     this.partyInfo$ = combineLatest([
-      this.facade.party$,
+      this.facade.getParty(),
       this.facade.userId$,
     ]).pipe(
       filter(([x, y]) => !!x && !!y),
       map(([party, userId]) => {
+        console.log('In page' , party, userId);
         const participants = Object.values(party.participants).filter(
           (x) => x.id != userId
         );
@@ -47,7 +48,8 @@ export class PartyPageComponent implements OnInit {
           trueParticipants: trueParticipants,
           falseParticipants: falseParticipants,
         };
-      })
+      }),
+      filter((x) => !!x)
     );
   }
   onSendMessage(data: { message: Message; partyId: string }) {

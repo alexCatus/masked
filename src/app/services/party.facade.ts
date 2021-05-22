@@ -15,9 +15,9 @@ import { PartyService } from './archives/party.service';
 import { MessageService } from './message.service';
 import { startParty } from './party.utils';
 import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 
 const mockedParty = {
-  id: 'party_1',
   isRunning: false,
   messages: [],
   participants: {
@@ -52,40 +52,67 @@ export class PartyFacade {
 
 partyId: string;
   constructor(
-    private firestore: AngularFirestore,
+    private db: AngularFirestore,
     private idService: IdService
   ) {}
 
   createParty(userName: string) {
-    const participantId = '0005';
+    const participantId = this.db.createId();
+    this.partyId = this.db.createId();
     const newParty = {
+      id: this.partyId,
       ...mockedParty,
       participants: {
         ...mockedParty.participants,
         [participantId]: {
-          id: '0005',
+          id: participantId,
           realName: userName,
           falseName: null,
         },
       },
     };
-    this.partyId = this.firestore.createId();
-    this.firestore.collection<Party>('parties').doc(this.partyId).set(newParty);
+    this.db.collection<Party>('parties').doc(this.partyId).set(newParty);
     this.userId$.next(participantId);
   }
   joinExistingParty(data: JoinPartyData) {
     const participant = {
+      id: this.db.createId(),
       realName: data.userName,
       falseName: null,
     };
+    this.userId$.next(participant.id);
+    this.partyId = data.partyId;
+    
+    this.db.doc<Party>('parties/'+this.partyId).update({
+      ['participants.'+participant.id]: participant
+    });
+    
   }
   getParty():Observable<Party> {
-    return this.firestore.doc<Party>('parties/'+this.partyId).valueChanges();
+    return this.db.doc<Party>('parties/'+this.partyId).valueChanges();
   }
   sendMessage(message: Message) {}
   beginParty() {
-    // this.party$.next(startParty(this.party$.value));
-    // this.partyService.startParty();
+    
+    // Create a reference to the party doc.
+    var partyRef = this.db.collection('parties').doc(this.partyId).ref;
+
+    this.db.firestore.runTransaction((transaction) => {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(partyRef).then((partyDoc) => {
+            if (!partyDoc.exists) {
+                throw "Document does not exist!";
+            }
+            var party = startParty(partyDoc.data());
+            transaction.update(partyRef, party);
+           
+        });
+    }).then(() => {
+        console.log("Transaction successfully committed!");
+    }).catch((error) => {
+        console.log("Transaction failed: ", error);
+    });
+
   }
 
   stopParty() {

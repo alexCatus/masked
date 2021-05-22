@@ -17,15 +17,18 @@ export interface PartyComponentInfo {
 export class PartyComponent implements OnInit {
   @Input()
   set partyInfo(value: PartyComponentInfo) {
-    this.trueParticipants = value.trueParticipants;
-    this.falseParticipants = value.falseParticipants;
-    this.user = value.user;
-    this.party = value.party;
+    if(!!value) {
+      this.trueParticipants = value.trueParticipants;
+      this.falseParticipants = value.falseParticipants;
+      this.user = value.user;
+      this.party = value.party;
+    }
+    
   }
   @Input()
-  trueParticipants;
+  trueParticipants = [];
   @Input()
-  falseParticipants;
+  falseParticipants = [];
   @Input()
   party: Party;
   @Input()
