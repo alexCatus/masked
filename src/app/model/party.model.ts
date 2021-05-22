@@ -8,6 +8,7 @@ export interface Party {
 export interface Message extends Participant {
   message: string;
   sentOn: Date;
+  userId: string;
 }
 
 export interface Participant {

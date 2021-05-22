@@ -8,7 +8,7 @@
     <li *ngFor="let message of messages" class="list-group-item">
       {{ party.isRunning ? message.falseName : message.realName }}
       {{ message.message }}
-      <span *ngIf="message.userId === userId" class="badge badge-success"
+      <span *ngIf="message.userId === user.id" class="badge badge-success"
         >you</span
       >
     </li>

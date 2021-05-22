@@ -64,7 +64,7 @@ export class PartyComponent implements OnInit {
     const message: string = this.form.get('message').value as string;
     this.sendMessageEmitter.emit({
       message: {
-        id: this.user.id,
+        userId: this.user.id,
         falseName: this.party.participants[this.user.id].falseName,
         realName: this.party.participants[this.user.id].realName,
         message: message,
