@@ -91,7 +91,9 @@ export class PartyFacade {
     var partyRef = this.db.doc<Party>('parties/' + this.partyId);
     // Atomically add a new region to the "regions" array field.
     partyRef.update({
-      messages: firebase.firestore.FieldValue.arrayUnion(message),
+      messages: firebase.firestore.FieldValue.arrayUnion(
+        message
+      ) as any as Message[],
     });
   }
   beginParty() {
