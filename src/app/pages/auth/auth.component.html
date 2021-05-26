@@ -1,0 +1,39 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="on">
+  <section>
+    <article>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="email">Enter your email</span>
+        </div>
+        <input
+          formControlName="email"
+          type="email"
+          class="form-control"
+          placeholder="email"
+          aria-label="email"
+          aria-describedby="email"
+        />
+      </div>
+    </article>
+    <article>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="password"
+            >Enter a password Alex gave you</span
+          >
+        </div>
+        <input
+          formControlName="password"
+          type="password"
+          class="form-control"
+          placeholder="password"
+          aria-label="password"
+          aria-describedby="password"
+        />
+      </div>
+    </article>
+    <article class="">
+      <button type="submit" class="btn btn-primary">SignIn</button>
+    </article>
+  </section>
+</form>
