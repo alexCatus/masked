@@ -3,37 +3,28 @@ import { Routes, RouterModule } from '@angular/router';
 import { LobbyPageComponent } from './pages/lobby-page.component';
 import { LandingPageComponent } from './pages/landing-page.component';
 import { PartyPageComponent } from './pages/party-page.component';
-import { AuthComponent } from './pages/auth/auth.component';
+import { NotAuthComponent } from './pages/auth/not-auth.component';
 import { NotAuthGuard } from './guards/not-auth.guard';
-import { AuthGuard } from './guards/auth-guard';
+import { AuthGuard } from './guards/not-loggued.guard copy';
+import { AuthPageComponent } from './pages/auth-page.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'game/', pathMatch: 'full' },
+  { path: 'game', redirectTo: 'game/', pathMatch: 'full' },
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'game',
-  },
-  {
-    path: 'game',
+    path: 'game/:gameId',
     canActivate: [AuthGuard],
-    component: LandingPageComponent,
-    children: [
-      {
-        // canActivate: [PartyNotInProgressGuard],
-        path: 'lobby',
-        component: LobbyPageComponent,
-      },
-      {
-        // canActivate: [PartyInProgressGuard],
-        path: 'party',
-        component: PartyPageComponent,
-      },
-    ],
+    component: AuthPageComponent,
   },
   {
     path: 'private',
     canActivate: [NotAuthGuard],
-    component: AuthComponent,
+    component: NotAuthComponent,
+  },
+  {
+    path: '***',
+    pathMatch: 'full',
+    redirectTo: 'game/',
   },
 ];
 

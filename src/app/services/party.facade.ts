@@ -16,6 +16,7 @@ import { MessageService } from './message.service';
 import { startParty } from './party.utils';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
+import { Router } from '@angular/router';
 
 const mockedParty = {
   isRunning: false,
@@ -51,7 +52,11 @@ export class PartyFacade {
   party$: Observable<Party>;
 
   partyId: string;
-  constructor(private db: AngularFirestore, private idService: IdService) {}
+  constructor(
+    private db: AngularFirestore,
+    private idService: IdService,
+    private router: Router
+  ) {}
 
   createParty(userName: string) {
     const participantId = this.db.createId();
@@ -68,8 +73,17 @@ export class PartyFacade {
         },
       },
     };
-    this.db.collection<Party>('parties').doc(this.partyId).set(newParty);
-    this.userId$.next(participantId);
+    this.db
+      .collection<Party>('parties')
+      .doc(this.partyId)
+      .set(newParty)
+      .then((x) => {
+        console.log('HERE');
+        this.router.navigate([`/game/${this.partyId}/lobby`], {
+          skipLocationChange: true,
+        });
+        this.userId$.next(participantId);
+      });
   }
   joinExistingParty(data: JoinPartyData) {
     const participant = {

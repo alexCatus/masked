@@ -16,7 +16,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClientModule } from '@angular/common/http';
 import { LandingComponent } from './components/landing/landing.component';
-import { AuthComponent } from './pages/auth/auth.component';
+import { NotAuthComponent } from './pages/auth/not-auth.component';
+import { AuthPageComponent } from './pages/auth-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +27,8 @@ import { AuthComponent } from './pages/auth/auth.component';
     LandingPageComponent,
     PartyComponent,
     PartyPageComponent,
-    AuthComponent,
+    NotAuthComponent,
+    AuthPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,13 @@
 <h2>Participants</h2>
+
+<span> {{ currentUrl }}</span>
 <button
   *ngIf="party?.id as partyId"
   class="btn btn-primary"
-  [cdkCopyToClipboard]="partyId"
+  [cdkCopyToClipboard]="currentUrl"
   [cdkCopyToClipboardAttempts]="5"
 >
-  Copy Id
+  share
 </button>
 
 <div class="container row">

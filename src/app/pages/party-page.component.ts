@@ -7,7 +7,7 @@ import { PartyComponentInfo } from '../components/party/party.component';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-party-page',
+  selector: 'app-game-page',
   template: `
     <app-party
       [partyInfo]="partyInfo$ | async"

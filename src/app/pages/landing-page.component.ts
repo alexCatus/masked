@@ -5,12 +5,9 @@ import { JoinPartyData } from '../model/party.model';
 import { PartyFacade } from '../services/party.facade';
 
 @Component({
-  selector: 'app-faith-page',
+  selector: 'app-landing-page',
   template: `
-    <app-landing
-      (joinExistingParty)="onJoinExistingParty($event)"
-      (createParty)="onCreateParty($event)"
-    ></app-landing>
+    <app-landing (createParty)="onCreateParty($event)"></app-landing>
   `,
   styles: [],
 })
@@ -22,12 +19,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  onJoinExistingParty(data: JoinPartyData) {
-    this.facade.joinExistingParty(data);
-    this.router.navigate(['lobby']);
-  }
   onCreateParty(username: string) {
     this.facade.createParty(username);
-    this.router.navigate(['/lobby']);
   }
 }

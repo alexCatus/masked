@@ -10,6 +10,9 @@ export class LobbyComponent implements OnInit {
   @Input()
   party: Party;
   @Input()
+  currentUrl: string;
+
+  @Input()
   userId: string;
   @Input()
   canStartParty: boolean;
@@ -18,8 +21,7 @@ export class LobbyComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   startParty() {
     this.startPartyEmitter.emit();

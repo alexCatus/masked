@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Party, WithId, Message, Participant } from '../../model/party.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import * as _ from 'lodash';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { WarningService } from '../warning.service';
@@ -16,7 +16,7 @@ const URL_PARTICIPANTS = URL + 'participants';
 export class PartyService {
   userId$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   partyId$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  party$: Observable<Party & WithId>;
+  party$: Observable<Party & WithId> = of();
   messages$: Observable<(Message & WithId)[]>;
 
   constructor(

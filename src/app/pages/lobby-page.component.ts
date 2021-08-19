@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     <app-lobby
       [party]="party$ | async"
       [userId]="userId$ | async"
+      [currentUrl]="currentUrl"
       [canStartParty]="canStartParty$ | async"
       (startParty)="onStartParty()"
     ></app-lobby>
@@ -18,19 +19,21 @@ import { ActivatedRoute, Router } from '@angular/router';
   styles: [],
 })
 export class LobbyPageComponent implements OnInit {
+  currentUrl: string = window.location.href;
   userId$: Observable<string>;
   party$: Observable<Party>;
   canStartParty$: Observable<boolean> = of(true);
   hasStarted$: Observable<boolean> = of(false);
-  constructor(private facade: PartyFacade, private router: Router) {}
+  constructor(private facade: PartyFacade, public router: Router) {}
 
   ngOnInit() {
-    this.party$ = this.facade.getParty().pipe(tap(party => {
-      if (party.isRunning) {
-        this.router.navigate(['/party']);
-      }
-    }  
-    ));
+    this.party$ = this.facade.getParty().pipe(
+      tap((party) => {
+        if (party.isRunning) {
+          this.router.navigate(['/game/party']);
+        }
+      })
+    );
     this.userId$ = this.facade.userId$;
   }
 
